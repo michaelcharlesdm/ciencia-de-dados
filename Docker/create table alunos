@@ -1,0 +1,34 @@
+create table alunos(
+    id int primary key,
+    nome varchar (255),
+    cpf varchar (11),
+    data_nascimento date,
+    data_matricula date,
+    endereco varchar(255)
+);
+
+create table cursos (
+    id int primary key,
+    nome varchar(255),
+    cod_turma varchar(10),
+    data_inicio date,
+    data_fim date,
+    componente varchar(255)
+);
+create table professores(
+    id int primary key,
+    nome varchar(255),
+    cpf varchar(11),
+    formacao varchar (255),
+    data_inicio date
+);
+
+CREATE TABLE turmas(
+    cod_turma varchar(10),
+    data_inicio date,
+    data_fim date
+);
+
+Alter table cursos drop column cod_turma,
+    drop column data_inicio,
+    drop column data_fim;
