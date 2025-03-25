@@ -1,0 +1,132 @@
+1° crie o arquivo compose.yml e sua estrutura.
+
+> para ver a versão que foi feita no banco de dados. \dt
+
+compose.yml
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    environment:
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: mydatabase
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+
+volumes:
+  postgres_data:
+
+
+no terminal Ubuntu 24.04(WSL):
+docker compose up -d
+
+docker composse exec -it postgres psql -U admin mydatabase
+
+create table alunos (
+  nome varchar(64) not null,
+  cpf varchar(11) not null unique,
+  data_nascimento date not null,
+  data_matricula date not null,
+  matricula varchar(10) not null unique,
+  endereco varchar(128)
+);
+create table cursos (
+  nome varchar(64) not null,
+  cod_turma varchar(10) not null unique,
+  data_inicio date not null,
+  data_fim date,
+  componentes varchar(128)
+);
+create table professores (
+  nome varchar(64) not null,
+  cpf varchar(11) not null unique,
+  formacao varchar(64) not null,
+  data_inicio date not null
+);
+Alter table
+  alunos
+add
+  column id serial,
+add
+  constraint pk_alunos primary key (id);
+
+
+Alter table
+  cursos
+add
+  column id serial,
+add
+  constraint pk_cursos primary key (id);
+
+
+Alter table
+  professores
+add
+  column id serial,
+add
+  constraint pk_professores primary key (id);
+
+
+
+-- para iniciar novamente o docker compose.
+docker compose exec -it postgres psql -U admin mydatabase
+
+-- \dt para ver a tabela
+
+
+create table turmas(
+  id serial primary key,
+  cod_turma varchar(10) not null unique,
+  data_inicio date not null,
+  data_fim date
+)
+
+
+
+select * from cursos;
+
+
+Alter table
+  cursos drop column cod_turma,
+  drop column data_inicio,
+  drop column data_fim;
+
+
+Versão 3:
+create table componentes(
+  id serial primary key,
+  ementa text,
+  data_inicio date not null,
+  data_fim date
+);
+
+
+alter table cursos drop column componentes;
+
+
+create table enderecos(
+  id serial primary key,
+  logradouro varchar(255) not null,
+  rua varchar(255) not null,
+  numero varchar(10) not null,
+  complemento varchar(255),
+  bairro varchar(255) not null,
+  cidade varchar(255) not null,
+  estado varchar(2) not null,
+  cep varchar(8) not null,
+  tipo varchar(10) not null
+);
+
+
+Alter table alunos drop column enderecos;
+
+
+Alter table turmas add column id_curso integer not null,
+  add constraint fk_turmas_cursos foreign key (id_curso) references cursos(id),
+  add column id_aluno integer not null,
+  add constraint fk_turmas_alunos foreign key (id_aluno) references alunos(id);
